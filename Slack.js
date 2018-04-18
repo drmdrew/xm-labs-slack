@@ -196,6 +196,22 @@ exports.getUserInfo = function( userid ) {
     
 }
 
+exports.lookupByEmail = function( email ) {
+    var slackRequest = http.request({
+        'endpoint': 'Slack',
+        'method': 'GET',
+        'path': '/users.lookupByEmail?token=' + http.authenticate( 'Slack' ) + '&email=' + encodeURIComponent( email )
+    });
+
+    var slackResponse = slackRequest.write();
+    var slackBody = JSON.parse( slackResponse.body );
+    if( !slackBody.ok ) {
+        console.log( 'Error ' + slackBody.error + ' looking up user by email "' + email + '"' );
+        return null
+    }
+    return slackBody.user;
+}
+
 
 exports.postMessage = function( payload ) {
     
